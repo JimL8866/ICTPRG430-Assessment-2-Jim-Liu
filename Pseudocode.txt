@@ -1,0 +1,87 @@
+DEFINE update odometer(km):
+    ADD km to odometer
+    if odometer less than 0
+        OUTPUT "The odometer is not valid"
+
+DEFINE display_address
+    FOR key, value in address
+        OUTPUT key value
+
+DEFINE decrease_demerit (number)
+        SUB number from demerit points 
+        IF less than 0
+            OUTPUT "Demerit points should not be allowed to fall below "
+        IF more than 9
+            OUTPUT "License suspension is imminent"
+        ELSE
+            OUTPUT "You currently have number of demerit points remaining"
+        ENDIF
+
+ DEFINE increase demerit (number)
+        ADD number to demerit points 
+        IF more than 12
+            OUTPUT"Demerit points should not be allowed to increase beyond 12"
+        IF more than 9
+            OUTPUT "License suspension is imminent" 
+        ELSE
+            OUTPUT "You currently have number of demerit points remaining"
+        ENDI
+
+
+DEFINE main
+    SET obj_driver1
+    CALL driver1.display_all_info()
+    CALL driver1.display_address()
+    CALL driver1.display_states_of_drive()
+    CALL driver1.display_current_demerit_points()
+    CALL driver1.decrease_demerit(2)
+    CALL driver1.increase_demerit(3)
+    
+    SET obj_driver2
+    CALL driver2.display_all_info()
+    CALL driver2.display_address()
+    CALL driver2.display_states_of_drive()
+    CALL driver2.display_current_demerit_points()
+    CALL driver2.decrease_demerit(2)
+    CALL driver2.increase_demerit(3)
+
+    SET obj_car1
+    CALL car1.display_color()
+    CALL car1.display_color()
+    CALL car1.car_general_info()
+    CALL car1.car_spec_info()
+    CALL car1.car_with_driver()
+
+    SET obj_car2
+    CALL car2.display_color()
+    CALL car2.change_color("White")
+    CALL car2.display_color()
+    CALL car2.car_general_info()
+    CALL car2.car_spec_info()
+    CALL car2.car_with_driver()
+
+    SET obj_truck1
+    CALL truck1.truck_general_info()
+    CALL truck1.truck_spec_info()
+    CALL truck1.truck_with_driver()
+    CALL truck1.display_odometer()
+    CALL truck1.update_odometer(20000)
+
+    SET obj_truck2
+    CALL truck2.truck_general_info()
+    CALL truck2.truck_spec_info()
+    CALL truck2.truck_with_driver()
+    CALL truck2.display_odometer()
+    CALL truck2.update_odometer(10000)
+    
+
+
+
+
+
+
+
+
+
+
+
