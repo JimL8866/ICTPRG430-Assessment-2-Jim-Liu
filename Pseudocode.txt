@@ -7,6 +7,8 @@ DEFINE display_address
     FOR key, value in address
         OUTPUT key value
 
+DEFINE 
+
 DEFINE decrease_demerit (number)
         SUB number from demerit points 
         IF less than 0
@@ -29,15 +31,13 @@ DEFINE decrease_demerit (number)
 
 
 DEFINE main
-    SET obj_driver1
+    SET obj_driver1 (3313377, "Gladys", "Berejkilan", "0414566999", address1, states1, 8)
     CALL driver1.display_all_info()
     CALL driver1.display_address()
     CALL driver1.display_states_of_drive()
     CALL driver1.display_current_demerit_points()
     CALL driver1.decrease_demerit(2)
     CALL driver1.increase_demerit(3)
-    Call driver1.write_driver_info()
-    Call driver1.read_dirver_info()
     
     SET obj_driver2
     CALL driver2.display_all_info()
@@ -46,9 +46,7 @@ DEFINE main
     CALL driver2.display_current_demerit_points()
     CALL driver2.decrease_demerit(2)
     CALL driver2.increase_demerit(3)
-    Call driver2.write_driver_info()
-    Call driver2.read_dirver_info()
-
+    
     SET obj_car1
     CALL car1.display_color()
     CALL car1.display_color()
