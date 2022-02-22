@@ -1,6 +1,4 @@
-import sys
-
-stdout_main = sys.stdout
+import csv
 
 states1 = ["Victoria", "New South Wales", "Queensland", "Northern Territory"]
 states2 = ["Victoria", "New South Wales", "Queensland", "Tasmania", "South Australia"]
@@ -20,7 +18,7 @@ address2 = {
 
 class Vehicle:
     """
-    A class to represent a vehicel.
+    A class to represent a vehicle.
 
     Attributes
     ----------
@@ -62,15 +60,23 @@ class Vehicle:
         """
         print(f"The vehicle current odometer is {self.current_odometer} ")
 
-    def update_odometer(self, km):
+    def update_odometer(self):
         """
         Update vehicle's odometer by adding number of kilometers driven
-        :param km: how many kilometers the vehicle has been driven
         :return: None
         """
-        self.current_odometer += km
-        if self.current_odometer < 0:    # if odometer less than o, prints error message
-            print("The odometer is not valid ")
+        while True:
+            try:
+                km = int(input("How many kilometers do you want to add the vehicle\n"))
+            except ValueError:
+                print("Error! Please put in a valid number")
+            else:
+                self.current_odometer += km
+                if self.current_odometer < 0:  
+                    print("The odometer should not less than zero.Please put in a positive number ")
+                    self.current_odometer -= km
+                else:
+                    break
 
     def vehicle_info(self):
         """
@@ -227,8 +233,8 @@ class Driver:
     decrease_demerit(number): decrease driver's demerit points
     increase_demerit(number): increase_demerit driver's demerit points
     driver_info(): display all the data for a driver
-    write_driver_info(): write driver info into a text file
-    read_driver_info(): static method, read driver info from text file
+    write_driver_info(): write driver info into a csv file
+    read_driver_info(): static method, read driver info from csv file
     """
     min_demerit_points = 0
     max_demerit_points = 12
@@ -260,30 +266,49 @@ class Driver:
         """
         print(f"The driver {self.f_name} {self.l_name}'s current demerit points is {self.current_demerit_points}.")
 
-    def decrease_demerit(self, number):
+    def decrease_demerit(self):
         """
-        Decrease driver's demerit points by subtracting number
-        :param number: how many number want decrease
+        Decrease driver's demerit points
         :return: None
         """
-        self.current_demerit_points -= number
-        if self.current_demerit_points < Driver.min_demerit_points:  # if demerit less than o, prints error message
-            print(f"Demerit points should not be allowed to fall below {Driver.min_demerit_points}")
+        while True:
+            try:
+                number = int(input("How many demerit points do you want to decrease\n"))
+            except ValueError:
+                print("Error! Please put in a valid number")
+            else:
+                self.current_demerit_points -= number
+                if self.current_demerit_points < Driver.min_demerit_points: 
+                    print(
+                        f"Demerit points should not be allowed to fall below {Driver.min_demerit_points}. Please put in a new number")
+                    self.current_demerit_points += number
+                elif self.current_demerit_points >= Driver.demerit_warning:   
+                    print("License suspension is imminent")
+                    break
+                else:
+                    break
 
-        elif self.current_demerit_points >= Driver.demerit_warning:  # if demerit reach 9, prints warning message
-            print("License suspension is imminent")
-
-    def increase_demerit(self, number):
+    def increase_demerit(self):
         """
-        Increase driver's demerit points by adding number
-        :param number: how many number want increase
+        Increase driver's demerit points
         :return: None
         """
-        self.current_demerit_points += number
-        if self.current_demerit_points > Driver.max_demerit_points:  # if demerit more than 12, prints error message
-            print(f"Demerit points should not be allowed to increase beyond {Driver.max_demerit_points}")
-        elif self.current_demerit_points >= Driver.demerit_warning:  # if demerit reach 9, prints warning message
-            print("License suspension is imminent")
+        while True:
+            try:
+                number = int(input("How many demerit points do you want to increase\n"))
+            except ValueError:
+                print("Error! Please put in a valid number")
+            else:
+                self.current_demerit_points += number
+                if self.current_demerit_points > Driver.max_demerit_points:  
+                    print(
+                        f"Demerit points should not be allowed to increase beyond {Driver.max_demerit_points}. Please put in a new number")
+                    self.current_demerit_points -= number
+                elif self.current_demerit_points >= Driver.demerit_warning:  
+                    print("License suspension is imminent")
+                    break
+                else:
+                    break
 
     def driver_info(self):
         """
@@ -301,38 +326,38 @@ class Driver:
 
     def write_driver_info(self):
         """
-        Redirect output from console to a text file
+        write driver infor to a csv file
         :return: None
         """
-        sys.stdout = open("DriverInfo.txt", "w")
-        self.driver_info()
-        sys.stdout.close()
-        sys.stdout = stdout_main  # Redirect from text file back to console
+        with open("DriverInfo.csv", "a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                [self.licence_number, self.f_name, self.l_name, self.mobile, self.address, self.states_of_drive,
+                 self.current_demerit_points])
 
     @staticmethod
     def read_driver_info():
         """
-        read driver info from text file.
+        read driver info from csv file.
         :return: None
         """
-        with open("DriverInfo.txt", "r") as file:
-            contents = file.read()
-            print(contents)
+        with open("DriverInfo.csv", "r") as data:
+            content = data.read()
+            print(content)
 
 
 def main():
     input("Press Enter to continue")
     # create driver1 instance
     driver1 = Driver(3313377, "Gladys", "Berejkilan", "0414566999", address1, states1, 8)
-    # test driver1 demerit decrease and increase 
     driver1.display_current_demerit_points()
-    input("Press Enter to continue")
-    driver1.decrease_demerit(2)
+    # test driver1 demerit decrease
+    driver1.decrease_demerit()
     driver1.display_current_demerit_points()
-    input("Press Enter to continue")
-    driver1.increase_demerit(3)
-    input("Press Enter to continue")
+    # test driver1 demerit increase
+    driver1.increase_demerit()
     driver1.display_current_demerit_points()
+
     input("Press Enter to continue")
     # prints driver1 all data
     driver1.driver_info()
@@ -342,19 +367,21 @@ def main():
     # read driver1 data from a text file
     driver1.read_driver_info()
 
-    # create driver1 instance
+    input("Press Enter to continue")
+    # create driver2 instance
     driver2 = Driver(9877345, "Boris", "Johnson", "0414123456", address2, states2, 3)
-    # test driver 2 demerit decrease and increase 
     driver2.display_current_demerit_points()
-    input("Press Enter to continue")
-    driver2.decrease_demerit(2)
+    # test driver2 demerit decrease
+    driver2.decrease_demerit()
     driver2.display_current_demerit_points()
-    input("Press Enter to continue")
-    driver2.increase_demerit(13)
+    # test driver2 demerit increase
+    driver2.increase_demerit()
     driver2.display_current_demerit_points()
+
     input("Press Enter to continue")
     # prints driver2 all data
     driver2.driver_info()
+    input("Press Enter to continue")
     # write driver2 data to a text file
     driver2.write_driver_info()
     # read driver2 data from a text file
@@ -372,12 +399,12 @@ def main():
     car1.change_color("White")
     car1.display_color()
     input("Press Enter to continue")
-    # test car1 odometer change
     car1.display_odometer()
-    car1.update_odometer(29000)
+    # test car1 odometer change
+    car1.update_odometer()
     car1.display_odometer()
     input("Press Enter to continue")
-    # prints car1 general data with specific data along with driver data 
+    # prints car1 general data with specific data along with driver data
     car1.car_info()
 
     # create car2 instance
@@ -391,12 +418,12 @@ def main():
     input("Press Enter to continue")
     car2.change_color("Black")
     car2.display_color()
-    # test car2 odometer change
     car2.display_odometer()
-    car2.update_odometer(10000)
+    # test car2 odometer change
+    car2.update_odometer()
     car2.display_odometer()
     input("Press Enter to continue")
-    # prints car2 general data with specific data along with driver data 
+    # prints car2 general data with specific data along with driver data
     car2.car_info()
 
     # create truck1 instance
@@ -407,10 +434,10 @@ def main():
     input("Press Enter to continue")
     # test truck1 odometer change
     truck1.display_odometer()
-    truck1.update_odometer(15000)
+    truck1.update_odometer()
     truck1.display_odometer()
     input("Press Enter to continue")
-    # prints truck1 general data with specific data along with driver data 
+    # prints truck1 general data with specific data along with driver data
     truck1.truck_info()
 
     # create truck2 instance
@@ -420,12 +447,40 @@ def main():
     truck2.vehicle_info()
     # test truck2 odometer change
     truck2.display_odometer()
-    truck2.update_odometer(-29000000)
+    truck2.update_odometer()
     truck2.display_odometer()
     input("Press Enter to continue")
-    # prints truck2 general data with specific data along with driver data 
+    # prints truck2 general data with specific data along with driver data
     truck2.truck_info()
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # future reference
+
+# import sys
+# stdout_main = sys.stdout  #  set the current file handle as standard default ouput (console)
+
+#     def write_driver_info(self):
+#         """
+#         Redirect output from console to a text file
+#         :return: None
+#         """
+#         sys.stdout = open("DriverInfo.txt", "a")    #Redirect sys.stdout to a text file
+#         self.driver_info()       #Prints to the redirected stdout (Output.txt)
+#         sys.stdout.close()       #Close the file
+#         sys.stdout = stdout_main  # Restore sys.stdout to our old saved file handler
