@@ -32,7 +32,7 @@ class Vehicle:
     ----------
     display_odometer(): display vehicle's current odometer
     update_odometer(km): update vehicle's odometer
-    vehicle_info(): display vehicle's general information
+    vehicle_general_info(): display vehicle's general information
 
     """
 
@@ -67,24 +67,25 @@ class Vehicle:
         """
         while True:
             try:
-                km = int(input("How many kilometers do you want to add the vehicle\n"))
+                km = int(input(f"How many kilometers do you want to add to {self.make}?\n"))
             except ValueError:
                 print("Error! Please put in a valid number")
             else:
                 self.current_odometer += km
-                if self.current_odometer < 0:  
+                if self.current_odometer < 0:
                     print("The odometer should not less than zero.Please put in a positive number ")
                     self.current_odometer -= km
                 else:
+                    print(f"The {self.make} current odometer is {self.current_odometer} ")
                     break
 
-    def vehicle_info(self):
+    def vehicle_general_info(self):
         """
         Prints the vehicle's general information rego, make, mode and current_odometer
         :return: None
         """
         print(f"""
-            Vehicle registration number {self.rego} is a {self.make}. Model is {self.model}.Odometer {self.current_odometer} km. 
+            The vehicle registration number {self.rego} is a {self.make}. Model is {self.model}.Odometer {self.current_odometer} km. 
         """)
 
 
@@ -108,7 +109,7 @@ class Car(Vehicle):
     ----------
     display_color(): display car's current color
     display_color(c_color): change car's color
-    car_info(): display car's specific and general data along with an associated given drivers' details
+    car_with_driver(): display car's specific and general data along with an associated given drivers' details
     """
 
     def __init__(self, rego, make, model, current_odometer, body_type, color, upholstery, num_of_doors, driver):
@@ -130,32 +131,38 @@ class Car(Vehicle):
         self.upholstery = upholstery
         self.number_of_doors = num_of_doors
 
+    def car_specific(self):
+        print(
+            f"The {self.make} car additional details are: body type {self.body_type}, color {self.color}, {self.upholstery} interior, {self.number_of_doors} doors.")
+
     def display_color(self):
         """
         Prints car's current color
         :return: None
         """
-        print(f"The color of {self.make}-{self.model} is {self.color}")
+        print(f"The color of {self.make}-{self.model} is {self.color}.")
 
-    def change_color(self, c_color):
+    def change_color(self):
         """
         change car's color
         :param c_color: which color want to change for the car
         :return: None
         """
-        self.color = c_color
+        print(f"The color of {self.make}-{self.model} is {self.color}")
+        colour = input("What color do you want to change?\n")
+        self.color = colour
+        print(f"The color of {self.make}-{self.model} is {self.color}")
 
-    def car_info(self):
+    def car_with_driver(self):
         """
         Prints car's specific and general data along with an associated given drivers' details
         :return: None
         """
-        print(f"""
-            Vehicle registration number {self.rego} is a {self.make}. Model is {self.model}.Odometer {self.current_odometer} km.
-            The driver of the vehicle is {self.driver.f_name} {self.driver.l_name}. Driver License number: {self.driver.licence_number}
-            Additional details:
-            The car details are: body type {self.body_type}, color {self.color}, {self.upholstery} interior, {self.number_of_doors} doors.
-        """)
+        print(
+            f"Vehicle registration number {self.rego} is a {self.make}. Model is {self.model}. Current odometer is {self.current_odometer} km.")
+        self.car_specific()
+        print(f"The driver info of {self.make} as follows:")
+        self.driver.driver_info()
 
 
 class Truck(Vehicle):
@@ -175,7 +182,7 @@ class Truck(Vehicle):
 
     Methods:
     ----------
-    truck_info(): display truck's specific and general data along with an associated given drivers' details
+    truck_with_dirver(): display truck's specific and general data along with an associated given drivers' details
 
     """
 
@@ -197,17 +204,20 @@ class Truck(Vehicle):
         self.num_of_wheels = num_of_wheels
         self.driver = driver
 
-    def truck_info(self):
+    def truck_specific(self):
+        print(
+            f"The {self.make} truck additional details are: max_load_cap {self.max_load_cap}, {self.num_of_axles} axles, {self.num_of_wheels} wheels.")
+
+    def truck_with_driver(self):
         """
         Prints truck's specific and general data along with an associated given drivers' details
         :return: None
         """
-        print(f"""
-               Vehicle registration number {self.rego} is a {self.make}. Model is {self.model}.Odometer {self.current_odometer} km.
-               The driver of the vehicle is {self.driver.f_name} {self.driver.l_name}. Driver License number: {self.driver.licence_number}
-               Additional details:
-               The truck details are: max_load_cap {self.max_load_cap}, {self.num_of_axles} axles, {self.num_of_wheels} wheels.
-           """)
+        print(
+            f"Vehicle registration number {self.rego} is a {self.make}. Model is {self.model}. Current odometer is {self.current_odometer} km.")
+        self.truck_specific()
+        print(f"The driver info of {self.make} as follows:")
+        self.driver.driver_info()
 
 
 class Driver:
@@ -273,19 +283,22 @@ class Driver:
         """
         while True:
             try:
-                number = int(input("How many demerit points do you want to decrease\n"))
+                number = int(
+                    input(f"How many demerit points do you want to decrease for {self.f_name} {self.l_name}\n"))
             except ValueError:
                 print("Error! Please put in a valid number")
             else:
                 self.current_demerit_points -= number
-                if self.current_demerit_points < Driver.min_demerit_points: 
+                if self.current_demerit_points < Driver.min_demerit_points:
                     print(
                         f"Demerit points should not be allowed to fall below {Driver.min_demerit_points}. Please put in a new number")
                     self.current_demerit_points += number
-                elif self.current_demerit_points >= Driver.demerit_warning:   
+                elif self.current_demerit_points >= Driver.demerit_warning:
                     print("License suspension is imminent")
                     break
                 else:
+                    print(
+                        f"The driver {self.f_name} {self.l_name}'s current demerit points is {self.current_demerit_points}.")
                     break
 
     def increase_demerit(self):
@@ -295,19 +308,22 @@ class Driver:
         """
         while True:
             try:
-                number = int(input("How many demerit points do you want to increase\n"))
+                number = int(
+                    input(f"How many demerit points do you want to increase for {self.f_name} {self.l_name}\n"))
             except ValueError:
                 print("Error! Please put in a valid number")
             else:
                 self.current_demerit_points += number
-                if self.current_demerit_points > Driver.max_demerit_points:  
+                if self.current_demerit_points > Driver.max_demerit_points:
                     print(
                         f"Demerit points should not be allowed to increase beyond {Driver.max_demerit_points}. Please put in a new number")
                     self.current_demerit_points -= number
-                elif self.current_demerit_points >= Driver.demerit_warning:  
+                elif self.current_demerit_points >= Driver.demerit_warning:
                     print("License suspension is imminent")
                     break
                 else:
+                    print(
+                        f"The driver {self.f_name} {self.l_name}'s current demerit points is {self.current_demerit_points}.")
                     break
 
     def driver_info(self):
@@ -316,7 +332,9 @@ class Driver:
         :return: None
         """
         print(
-            f"The driver {self.f_name} {self.l_name}, has a driver licence number : {self.licence_number}\nContact phone number is : {self.mobile}\nDriver address is :")
+            f"The driver {self.f_name} {self.l_name}, has a driver licence number : {self.licence_number}. Current "
+            f"demerit point is {self.current_demerit_points}.\nContact phone number is : {self.mobile}\nDriver "
+            f"address is :") 
         for (k, v) in self.address.items():
             print(f"{k} : {v}")
         print("The driver is licenced to drive in the following states:")
@@ -346,113 +364,93 @@ class Driver:
             print(content)
 
 
+# set all class functions
+all_function = ["car_general_info", "truck_general_info", "car_specific", "truck_specific", "driver_info",
+                "display_current_demerit_points",
+                "decrease_demerit", "increase_demerit", "update_odometer", "change_color", "car_with_driver",
+                "truck_with_driver", "exit"]
+
+
 def main():
-    input("Press Enter to continue")
-    # create driver1 instance
     driver1 = Driver(3313377, "Gladys", "Berejkilan", "0414566999", address1, states1, 8)
-    driver1.display_current_demerit_points()
-    # test driver1 demerit decrease
-    driver1.decrease_demerit()
-    driver1.display_current_demerit_points()
-    # test driver1 demerit increase
-    driver1.increase_demerit()
-    driver1.display_current_demerit_points()
-
-    input("Press Enter to continue")
-    # prints driver1 all data
-    driver1.driver_info()
-    input("Press Enter to continue")
-    # write driver1 data to a text file
-    driver1.write_driver_info()
-    # read driver1 data from a text file
-    driver1.read_driver_info()
-
-    input("Press Enter to continue")
-    # create driver2 instance
     driver2 = Driver(9877345, "Boris", "Johnson", "0414123456", address2, states2, 3)
-    driver2.display_current_demerit_points()
-    # test driver2 demerit decrease
-    driver2.decrease_demerit()
-    driver2.display_current_demerit_points()
-    # test driver2 demerit increase
-    driver2.increase_demerit()
-    driver2.display_current_demerit_points()
-
-    input("Press Enter to continue")
-    # prints driver2 all data
-    driver2.driver_info()
-    input("Press Enter to continue")
-    # write driver2 data to a text file
-    driver2.write_driver_info()
-    # read driver2 data from a text file
-    driver2.read_driver_info()
-
-    # create car1 instance
     car1 = Car("BBJ702", "Mazda", "CX3", 10000, "Hatch", "Blue", "Leather", 5, driver1)
-    input("Press Enter to continue")
-    # prints car1 general data
-    car1.vehicle_info()
-    input("Press Enter to continue")
-    # test car1 color change
-    car1.display_color()
-    input("Press Enter to continue")
-    car1.change_color("White")
-    car1.display_color()
-    input("Press Enter to continue")
-    car1.display_odometer()
-    # test car1 odometer change
-    car1.update_odometer()
-    car1.display_odometer()
-    input("Press Enter to continue")
-    # prints car1 general data with specific data along with driver data
-    car1.car_info()
-
-    # create car2 instance
     car2 = Car("OY0400", "Ford", "Festiva", 39785, "Sedan", "Green", "Fabric", 4, driver2)
-    input("Press Enter to continue")
-    # prints car2 general data
-    car2.vehicle_info()
-    input("Press Enter to continue")
-    # test car2 color change
-    car2.display_color()
-    input("Press Enter to continue")
-    car2.change_color("Black")
-    car2.display_color()
-    car2.display_odometer()
-    # test car2 odometer change
-    car2.update_odometer()
-    car2.display_odometer()
-    input("Press Enter to continue")
-    # prints car2 general data with specific data along with driver data
-    car2.car_info()
-
-    # create truck1 instance
     truck1 = Truck("XJBJ882", "Kenworth", "BigMother5000", 150000, "40 tonnes", 5, 18, driver1)
-    input("Press Enter to continue")
-    # print truck1 general data
-    truck1.vehicle_info()
-    input("Press Enter to continue")
-    # test truck1 odometer change
-    truck1.display_odometer()
-    truck1.update_odometer()
-    truck1.display_odometer()
-    input("Press Enter to continue")
-    # prints truck1 general data with specific data along with driver data
-    truck1.truck_info()
-
-    # create truck2 instance
     truck2 = Truck("ARC542", "Hyundai", "iLoad", 76520, "2 tonnes", 2, 4, driver2)
-    input("Press Enter to continue")
-    # print truck2 general data
-    truck2.vehicle_info()
-    # test truck2 odometer change
-    truck2.display_odometer()
-    truck2.update_odometer()
-    truck2.display_odometer()
-    input("Press Enter to continue")
-    # prints truck2 general data with specific data along with driver data
-    truck2.truck_info()
-
+    print("Welcome to the Inventory APP presentation.")
+    while True:
+        print("Please choose which information do you want to display?\n")
+        for i, func in enumerate(all_function, 1):
+            print(i, func)
+        num = int(input())
+        if num == 1:
+            car1_g = getattr(car1, all_function[num - 1].replace("car", "vehicle"))
+            car2_g = getattr(car2, all_function[num - 1].replace("car", "vehicle"))
+            car1_g()
+            car2_g()
+        elif num == 2:
+            truck1_g = getattr(truck1, all_function[num - 1].replace("truck", "vehicle"))
+            truck2_g = getattr(truck2, all_function[num - 1].replace("truck", "vehicle"))
+            truck1_g()
+            truck2_g()
+        elif num == 3:
+            car1_s = getattr(car1, all_function[num - 1])
+            car2_s = getattr(car2, all_function[num - 1])
+            car1_s()
+            car2_s()
+        elif num == 4:
+            truck1_s = getattr(truck1, all_function[num - 1])
+            truck2_s = getattr(truck2, all_function[num - 1])
+            truck1_s()
+            truck2_s()
+        elif num == 5:
+            driver1_g = getattr(driver1, all_function[num - 1])
+            driver2_g = getattr(driver2, all_function[num - 1])
+            driver1_g()
+            print()
+            driver2_g()
+        elif num == 6:
+            driver1_dd = getattr(driver1, all_function[num - 1])
+            driver2_dd = getattr(driver2, all_function[num - 1])
+            driver1_dd()
+            driver2_dd()
+        elif num == 7:
+            driver1_decrease = getattr(driver1, all_function[num - 1])
+            driver2_decrease = getattr(driver2, all_function[num - 1])
+            driver1_decrease()
+            driver2_decrease()
+        elif num == 8:
+            driver1_increase = getattr(driver1, all_function[num - 1])
+            driver2_increase = getattr(driver2, all_function[num - 1])
+            driver1_increase()
+            driver2_increase()
+        elif num == 9:
+            car1_odo = getattr(car1, all_function[num - 1])
+            car2_odo = getattr(car2, all_function[num - 1])
+            car1_odo()
+            car2_odo()
+        elif num == 10:
+            car1_color = getattr(car1, all_function[num - 1])
+            car2_color = getattr(car2, all_function[num - 1])
+            car1_color()
+            input("Please any key to continue.")
+            car2_color()
+        elif num == 11:
+            car1_with_driver = getattr(car1, all_function[num - 1])
+            car2_with_driver = getattr(car2, all_function[num - 1])
+            car1_with_driver()
+            input("Please any key to continue.")
+            car2_with_driver()
+            input("Please any key to continue.")
+        elif num == 12:
+            truck1_with_driver = getattr(truck1, all_function[num - 1])
+            truck2_with_driver = getattr(truck2, all_function[num - 1])
+            truck1_with_driver()
+            input("Please any key to continue.")
+            truck2_with_driver()
+        elif num == 13:
+            break
 
 if __name__ == "__main__":
     main()
