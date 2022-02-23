@@ -408,7 +408,7 @@ def main():
             driver1_g = getattr(driver1, all_function[num - 1])
             driver2_g = getattr(driver2, all_function[num - 1])
             driver1_g()
-            print()
+            input("Please any key to continue.")
             driver2_g()
         elif num == 6:
             driver1_dd = getattr(driver1, all_function[num - 1])
