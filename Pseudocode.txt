@@ -7,7 +7,9 @@ DEFINE display_address
     FOR key, value in address
         OUTPUT key value
 
-DEFINE 
+DEFINE display states_of_drive
+    FOR states in states_of_drive
+        OUTPUT states
 
 DEFINE decrease_demerit (number)
         SUB number from demerit points 
